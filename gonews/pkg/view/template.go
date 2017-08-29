@@ -4,12 +4,24 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"path/filepath"
 )
 
 var (
 	//tpIndex = template.New("") //สร้าง temp เปล่า
-	tpIndex = parseTemplate("template/root.tmpl", "template/index.tmpl")
+	// tpIndex = parseTemplate("template/root.tmpl", "template/index.tmpl")
+	tpIndex = parseTemplate("root.tmpl", "index.tmpl")
 )
+
+const templateDir = "template"
+
+func joinTemplateDir(files ...string) []string { // func สำหรับจัดการ Path [template/]
+	r := make([]string, len(files))
+	for i, f := range files {
+		r[i] = filepath.Join(templateDir, f)
+	}
+	return r
+}
 
 /*
 func init() {
@@ -26,8 +38,8 @@ func init() {
 func parseTemplate(file ...string) *template.Template {
 	t := template.New("")       // Create emtpy template
 	t.Funcs(template.FuncMap{}) //ใส่ func เปล่า เพราะถ้าไม่ใส่แล้วไป ParseFile มันจะไม่เห็น
-	_, err := t.ParseFiles(file...)
-
+	//_, err := t.ParseFiles(file...)
+	_, err := t.ParseFiles(joinTemplateDir(file...)...)
 	if err != nil {
 		panic(err)
 	}
