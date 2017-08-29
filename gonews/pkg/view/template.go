@@ -1,10 +1,15 @@
 package view
 
 import (
+	"bytes"
 	"html/template"
-	"log"
 	"net/http"
 	"path/filepath"
+
+	"github.com/tdewolff/minify"
+	"github.com/tdewolff/minify/css"
+	"github.com/tdewolff/minify/html"
+	"github.com/tdewolff/minify/js"
 )
 
 var (
@@ -13,6 +18,8 @@ var (
 	tpIndex      = parseTemplate("root.tmpl", "index.tmpl")
 	tpAdminLogin = parseTemplate("root.tmpl", "admin/login.tmpl")
 )
+
+var m = minify.New()
 
 const templateDir = "template"
 
@@ -24,17 +31,11 @@ func joinTemplateDir(files ...string) []string { // func สำหรับจ�
 	return r
 }
 
-/*
 func init() {
-	tpIndex.Funcs(template.FuncMap{}) //ใส่ func เปล่า เพราะถ้าไม่ใส่แล้วไป ParseFile มันจะไม่เห็น
-	_, err := tpIndex.ParseFiles("template/root.tmpl", "template/index.tmpl")
-
-	if err != nil {
-		panic(err)
-	}
-	tpIndex = tpIndex.Lookup("root")
+	m.AddFunc("text/html", html.Minify)
+	m.AddFunc("text/css", css.Minify)
+	m.AddFunc("text/javascript", js.Minify)
 }
-*/
 
 func parseTemplate(file ...string) *template.Template {
 	t := template.New("")       // Create emtpy template
@@ -48,12 +49,28 @@ func parseTemplate(file ...string) *template.Template {
 	return t
 }
 
+/* วิธี render แบบที่ 1 หลังจากเขียน Header ก็จะสร้างตัวแปร err มารับค่าที่ได้จากการ Execute
 func render(t *template.Template, w http.ResponseWriter, data interface{}) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	err := t.Execute(w, data)
 	if err != nil {
 		log.Println(err)
 	}
+}
+*/
+
+// วิธี render แบบที่ 2 สร้าง buffer มาเก็บค่าก่อน แล้วค่อยสั่ง Execute ที่ Pointer buf
+//ให้ Template เขียนเข้ามาให้ตัว buffer แทนการเขียน w http.ResponseWriter โดยตรง
+func render(t *template.Template, w http.ResponseWriter, data interface{}) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	buf := bytes.Buffer{} //สร้าง buffer
+	err := t.Execute(&buf, data)
+	// t.Excure => buf => m.minify => w
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	m.Minify("text/html", w, &buf)
 }
 
 // Index render index view
