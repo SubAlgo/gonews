@@ -7,9 +7,11 @@ import (
 )
 
 var (
-	tpIndex = template.New("") //สร้าง temp เปล่า
+	//tpIndex = template.New("") //สร้าง temp เปล่า
+	tpIndex = parseTemplate("template/root.tmpl", "template/index.tmpl")
 )
 
+/*
 func init() {
 	tpIndex.Funcs(template.FuncMap{}) //ใส่ func เปล่า เพราะถ้าไม่ใส่แล้วไป ParseFile มันจะไม่เห็น
 	_, err := tpIndex.ParseFiles("template/root.tmpl", "template/index.tmpl")
@@ -18,6 +20,19 @@ func init() {
 		panic(err)
 	}
 	tpIndex = tpIndex.Lookup("root")
+}
+*/
+
+func parseTemplate(file ...string) *template.Template {
+	t := template.New("")       // Create emtpy template
+	t.Funcs(template.FuncMap{}) //ใส่ func เปล่า เพราะถ้าไม่ใส่แล้วไป ParseFile มันจะไม่เห็น
+	_, err := t.ParseFiles(file...)
+
+	if err != nil {
+		panic(err)
+	}
+	t = t.Lookup("root")
+	return t
 }
 
 func render(t *template.Template, w http.ResponseWriter, data interface{}) {
