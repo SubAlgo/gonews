@@ -13,7 +13,10 @@ func Mount(mux *http.ServeMux) {
 	adminMux.HandleFunc("/create", adminCreate) // /admin/create
 	adminMux.HandleFunc("/edit", adminEdit)     // /admin/edit
 
-	mux.Handle("/admin/", onlyAdmin(adminMux))
+	// mux.Handle("/admin/", onlyAdmin(adminMux))
+	//ถ้าไม่ใช้ StripPrefix path ต้องเป็น adminMux.HandleFunc("/admin/login", adminLogin)
+	mux.Handle("/admin/", http.StripPrefix("/admin", onlyAdmin(adminMux)))
+
 }
 
 //Middleware สำหรับ check การ Login ของ Admin

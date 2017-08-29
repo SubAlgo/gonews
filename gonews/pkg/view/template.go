@@ -10,7 +10,8 @@ import (
 var (
 	//tpIndex = template.New("") //สร้าง temp เปล่า
 	// tpIndex = parseTemplate("template/root.tmpl", "template/index.tmpl")
-	tpIndex = parseTemplate("root.tmpl", "index.tmpl")
+	tpIndex      = parseTemplate("root.tmpl", "index.tmpl")
+	tpAdminLogin = parseTemplate("root.tmpl", "admin/login.tmpl")
 )
 
 const templateDir = "template"
@@ -58,4 +59,9 @@ func render(t *template.Template, w http.ResponseWriter, data interface{}) {
 // Index render index view
 func Index(w http.ResponseWriter, data interface{}) {
 	render(tpIndex, w, data)
+}
+
+// AdminLogin renders admin login view
+func AdminLogin(w http.ResponseWriter, data interface{}) {
+	render(tpAdminLogin, w, data)
 }
