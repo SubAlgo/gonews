@@ -1,6 +1,7 @@
 package app
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/subalgo/gonews/pkg/view"
@@ -19,6 +20,10 @@ func adminList(w http.ResponseWriter, r *http.Request) {
 }
 
 func adminCreate(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodPost {
+		title := r.FormValue("title")
+		log.Println(title)
+	}
 	view.AdminCreate(w, nil)
 }
 

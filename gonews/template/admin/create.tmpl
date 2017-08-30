@@ -4,20 +4,20 @@
     <form class="ui form" method="POST" action="">
         <div class="field">
             <label>Title</label>
-            <input>
+            <input name="title">
         </div>
 
         <div class="field">
             <label>Image</label>
-            <input type="file">
+            <input type="file" name="image">
         </div>
 
         <div class="field">
             <label>Detail</label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
+            <textarea name="detail" id="" cols="30" rows="10"></textarea>
         </div>
 
-        <button class="ui blue submit button">Create</button>
+        <button class="ui blue submit button" type="submit">Create</button>
         <a class="ui red button" href="/admin/list">Cancle</a>
     </form>
 </div>
