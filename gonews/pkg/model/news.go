@@ -3,6 +3,7 @@ package model
 import (
 	"crypto/rand"
 	"encoding/base64"
+	"sync"
 	"time"
 )
 
@@ -18,6 +19,7 @@ type News struct {
 
 var (
 	newsStroage []*News
+	muteNews    sync.Mutex //เพื่อป้องกัน การ Create data พร้อมๆ ที่อาจมีปัญหา
 )
 
 func generateID() string {
@@ -32,6 +34,9 @@ func CreateNews(news *News) {
 	news.ID = generateID()
 	news.CreatedAt = time.Now()
 	news.UpdatedAt = news.CreatedAt
+	// รายละเอียด คลิป4 [52.00]
+	muteNews.Lock()         //ทำการ lock เพื่อป้องกันการส่ง Requres
+	defer muteNews.Unlock() //เพื่อให้แน่ใจว่า unlock แล้ว
 	newsStroage = append(newsStroage, news)
 }
 
@@ -52,6 +57,9 @@ func GetNews(id string) *News {
 
 // DeleteNews fff
 func DeleteNews(id string) {
+	// รายละเอียด คลิป4 [52.00]
+	muteNews.Lock()         //ทำการ lock เพื่อป้องกันการส่ง Requres
+	defer muteNews.Unlock() //เพื่อให้แน่ใจว่า unlock แล้ว
 	for i, news := range newsStroage {
 		if news.ID == id {
 			newsStroage = append(newsStroage[:i], newsStroage[i+1:]...)
