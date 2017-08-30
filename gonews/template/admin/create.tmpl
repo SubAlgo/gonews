@@ -1,6 +1,25 @@
 {{define "root-body"}}
 <div>
-    Admin Create
+    <h1>Create News</h1>
+    <form class="ui form" method="POST" action="">
+        <div class="field">
+            <label>Title</label>
+            <input>
+        </div>
+
+        <div class="field">
+            <label>Image</label>
+            <input type="file">
+        </div>
+
+        <div class="field">
+            <label>Detail</label>
+            <textarea name="" id="" cols="30" rows="10"></textarea>
+        </div>
+
+        <button class="ui blue submit button">Create</button>
+        <a class="ui red button" href="/admin/list">Cancle</a>
+    </form>
 </div>
 {{end}} 
 {{define "root-script"}}
