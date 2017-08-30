@@ -22,7 +22,17 @@ func adminList(w http.ResponseWriter, r *http.Request) {
 func adminCreate(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		title := r.FormValue("title")
+		detail := r.FormValue("detail")
+		//image, imageHeader, err := r.FormFile("image")
+		_, _, err := r.FormFile("image")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		log.Println(title)
+		log.Println(detail)
+		http.Redirect(w, r, "/admin/create", http.StatusSeeOther)
+		return
 	}
 	view.AdminCreate(w, nil)
 }
