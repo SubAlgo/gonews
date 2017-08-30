@@ -1,12 +1,22 @@
 {{define "root-body"}}
 <div>
-    Login Page
+    <form class="ui form" methof="POST" action="">
+        <div class="field">
+            <label>Username</label>
+            <input>
+        </div>
+
+        <div class="field">
+            <label>Password</label>
+            <input type="password">
+            <button class="ui submit blue button">Login</button>
+        </div>
+    </form>
 </div>
 {{end}}
 
 {{define "root-script"}}
 <script>
-    console.log("index")
 
 </script>
 {{end}} 

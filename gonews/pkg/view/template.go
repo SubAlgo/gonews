@@ -1,9 +1,8 @@
 package view
 
 import (
+	"bytes"
 	"html/template"
-	"io"
-	"log"
 	"net/http"
 	"path/filepath"
 
@@ -16,8 +15,11 @@ import (
 var (
 	//tpIndex = template.New("") //สร้าง temp เปล่า
 	// tpIndex = parseTemplate("template/root.tmpl", "template/index.tmpl")
-	tpIndex      = parseTemplate("root.tmpl", "index.tmpl")
-	tpAdminLogin = parseTemplate("root.tmpl", "admin/login.tmpl")
+	tpIndex       = parseTemplate("root.tmpl", "index.tmpl")
+	tpAdminLogin  = parseTemplate("root.tmpl", "admin/login.tmpl")
+	tpAdminList   = parseTemplate("root.tmpl", "admin/list.tmpl")
+	tpAdminCreate = parseTemplate("root.tmpl", "admin/create.tmpl")
+	tpAdminEdit   = parseTemplate("root.tmpl", "admin/edit.tmpl")
 )
 
 var m = minify.New()
@@ -64,8 +66,8 @@ func render(t *template.Template, w http.ResponseWriter, data interface{}) {
 }
 */
 
-/*วิธี render แบบที่ 2 สร้าง buffer มาเก็บค่าก่อน แล้วค่อยสั่ง Execute ที่ Pointer buf
-ให้ Template เขียนเข้ามาให้ตัว buffer แทนการเขียน w http.ResponseWriter โดยตรง
+//วิธี render แบบที่ 2 สร้าง buffer มาเก็บค่าก่อน แล้วค่อยสั่ง Execute ที่ Pointer buf
+//ให้ Template เขียนเข้ามาให้ตัว buffer แทนการเขียน w http.ResponseWriter โดยตรง
 func render(t *template.Template, w http.ResponseWriter, data interface{}) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	buf := bytes.Buffer{} //สร้าง buffer
@@ -77,9 +79,8 @@ func render(t *template.Template, w http.ResponseWriter, data interface{}) {
 	}
 	m.Minify("text/html", w, &buf)
 }
-*/
 
-// RENDER ด้วย Pipe
+/*RENDER ด้วย Pipe
 func render(t *template.Template, w http.ResponseWriter, data interface{}) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
@@ -95,15 +96,4 @@ func render(t *template.Template, w http.ResponseWriter, data interface{}) {
 		return
 	}
 }
-
-// --------------------------------------- RENDER ---------------------------------------
-
-// Index render index view
-func Index(w http.ResponseWriter, data interface{}) {
-	render(tpIndex, w, data)
-}
-
-// AdminLogin renders admin login view
-func AdminLogin(w http.ResponseWriter, data interface{}) {
-	render(tpAdminLogin, w, data)
-}
+*/
