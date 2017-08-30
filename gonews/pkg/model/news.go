@@ -18,7 +18,7 @@ type News struct {
 }
 
 var (
-	newsStroage []*News
+	newsStorage []*News
 	muteNews    sync.Mutex //เพื่อป้องกัน การ Create data พร้อมๆ ที่อาจมีปัญหา
 )
 
@@ -37,17 +37,23 @@ func CreateNews(news *News) {
 	// รายละเอียด คลิป4 [52.00]
 	muteNews.Lock()         //ทำการ lock เพื่อป้องกันการส่ง Requres
 	defer muteNews.Unlock() //เพื่อให้แน่ใจว่า unlock แล้ว
-	newsStroage = append(newsStroage, news)
+	newsStorage = append(newsStorage, news)
 }
 
 // ListNews fff
 func ListNews() []*News {
-	return newsStroage
+	muteNews.Lock()         //ทำการ lock เพื่อป้องกันการส่ง Requres
+	defer muteNews.Unlock() //เพื่อให้แน่ใจว่า unlock แล้ว
+	r := make([]*News, len(newsStorage))
+	for i := range newsStorage {
+		r[i] = newsStorage[i]
+	}
+	return r
 }
 
 // GetNews fff
 func GetNews(id string) *News {
-	for _, news := range newsStroage {
+	for _, news := range newsStorage {
 		if news.ID == id {
 			return news
 		}
@@ -60,9 +66,9 @@ func DeleteNews(id string) {
 	// รายละเอียด คลิป4 [52.00]
 	muteNews.Lock()         //ทำการ lock เพื่อป้องกันการส่ง Requres
 	defer muteNews.Unlock() //เพื่อให้แน่ใจว่า unlock แล้ว
-	for i, news := range newsStroage {
+	for i, news := range newsStorage {
 		if news.ID == id {
-			newsStroage = append(newsStroage[:i], newsStroage[i+1:]...)
+			newsStorage = append(newsStorage[:i], newsStorage[i+1:]...)
 			return
 		}
 	}
