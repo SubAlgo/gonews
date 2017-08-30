@@ -1,11 +1,20 @@
 package view
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/subalgo/gonews/pkg/model"
+)
+
+// IndexData fff
+type IndexData struct {
+	List []*model.News
+}
 
 // --------------------------------------- RENDER ---------------------------------------
 
 // Index render index view
-func Index(w http.ResponseWriter, data interface{}) {
+func Index(w http.ResponseWriter, data *IndexData) {
 	render(tpIndex, w, data)
 }
 

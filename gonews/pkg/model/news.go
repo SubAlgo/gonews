@@ -24,13 +24,14 @@ func generateID() string {
 	buf := make([]byte, 16)
 	rand.Read(buf)
 	return base64.StdEncoding.EncodeToString(buf)
+	//return base64.StdEncoding.EncodeToString(buf)
 }
 
 // CreateNews create News struct
 func CreateNews(news *News) {
 	news.ID = generateID()
 	news.CreatedAt = time.Now()
-	news.UpdatedAt = new.CreatedAt
+	news.UpdatedAt = news.CreatedAt
 	newsStroage = append(newsStroage, news)
 }
 

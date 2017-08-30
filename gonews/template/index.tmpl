@@ -2,6 +2,13 @@
 <div>
     Index Page
     <a href="/admin/login">Login</a>
+    <br>
+    {{.}}
+    <ul>
+    {{range .List}}
+        <li><a href="/news/{{.ID}}">{{.Title}}</a></li>
+    {{end}}
+    </ul>
 </div>
 {{end}}
 
