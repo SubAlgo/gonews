@@ -29,6 +29,8 @@ func generateID() string {
 // CreateNews create News struct
 func CreateNews(news *News) {
 	news.ID = generateID()
+	news.CreatedAt = time.Now()
+	news.UpdatedAt = new.CreatedAt
 	newsStroage = append(newsStroage, news)
 }
 

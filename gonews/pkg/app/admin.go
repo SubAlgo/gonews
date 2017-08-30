@@ -1,9 +1,9 @@
 package app
 
 import (
-	"log"
 	"net/http"
 
+	"github.com/subalgo/gonews/pkg/model"
 	"github.com/subalgo/gonews/pkg/view"
 )
 
@@ -21,16 +21,19 @@ func adminList(w http.ResponseWriter, r *http.Request) {
 
 func adminCreate(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
-		title := r.FormValue("title")
-		detail := r.FormValue("detail")
-		//image, imageHeader, err := r.FormFile("image")
-		_, _, err := r.FormFile("image")
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+		n := model.News{
+			Title:  r.FormValue("title"),
+			Detail: r.FormValue("detail"),
 		}
-		log.Println(title)
-		log.Println(detail)
+		model.CreateNews(&n)
+		//image, imageHeader, err := r.FormFile("image")
+		/*
+			_, _, err := r.FormFile("image")
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+		*/
 		http.Redirect(w, r, "/admin/create", http.StatusSeeOther)
 		return
 	}
