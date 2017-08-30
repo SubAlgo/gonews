@@ -3,7 +3,7 @@ package app
 import (
 	"net/http"
 
-	"github.com/subalgo/gonews/pkg/view" // Import package view
+	"github.com/subalgo/gonews/pkg/view"
 )
 
 func adminLogin(w http.ResponseWriter, r *http.Request) {
