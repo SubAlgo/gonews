@@ -25,7 +25,7 @@ func adminCreate(w http.ResponseWriter, r *http.Request) {
 			Title:  r.FormValue("title"),
 			Detail: r.FormValue("detail"),
 		}
-		model.CreateNews(&n)
+		model.CreateNews(n)
 		//image, imageHeader, err := r.FormFile("image")
 		/*
 			_, _, err := r.FormFile("image")

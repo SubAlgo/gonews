@@ -5,11 +5,13 @@ import (
 	"encoding/base64"
 	"sync"
 	"time"
+
+	"gopkg.in/mgo.v2/bson"
 )
 
 // News type
 type News struct {
-	ID        string
+	ID        bson.ObjectId
 	Title     string
 	Image     string
 	Detail    string
@@ -18,7 +20,7 @@ type News struct {
 }
 
 var (
-	newsStorage []*News
+	newsStorage []News
 	muteNews    sync.Mutex //เพื่อป้องกัน การ Create data พร้อมๆ ที่อาจมีปัญหา
 )
 
@@ -30,7 +32,7 @@ func generateID() string {
 }
 
 // CreateNews create News struct
-func CreateNews(news *News) {
+func CreateNews(news News) {
 	news.ID = generateID()
 	news.CreatedAt = time.Now()
 	news.UpdatedAt = news.CreatedAt
@@ -46,16 +48,21 @@ func ListNews() []*News {
 	defer muteNews.Unlock() //เพื่อให้แน่ใจว่า unlock แล้ว
 	r := make([]*News, len(newsStorage))
 	for i := range newsStorage {
-		r[i] = newsStorage[i]
+		n := newsStorage[i]
+		r[i] = &n
 	}
 	return r
 }
 
 // GetNews fff
 func GetNews(id string) *News {
+	muteNews.Lock()         //ทำการ lock เพื่อป้องกันการส่ง Requres
+	defer muteNews.Unlock() //เพื่อให้แน่ใจว่า unlock แล้ว
+
 	for _, news := range newsStorage {
 		if news.ID == id {
-			return news
+			n := news
+			return &n
 		}
 	}
 	return nil
