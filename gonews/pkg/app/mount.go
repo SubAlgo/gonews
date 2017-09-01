@@ -4,8 +4,9 @@ import "net/http"
 
 // Mount mount handler to mux (ชื่อ func ที่เป็นตัวใหญ่นำหน้าจะมีการ Export จำเป็นต้องมีการ commnet)
 func Mount(mux *http.ServeMux) {
-	mux.HandleFunc("/", index)         // list all news
-	mux.HandleFunc("/news/", newsView) // /news/:path
+	mux.HandleFunc("/", index) // list all news
+	//mux.HandleFunc("/news/", newsView) // /news/:path
+	mux.Handle("/news/", http.StripPrefix("/news", http.HandlerFunc(newsView)))
 
 	adminMux := http.NewServeMux()
 	adminMux.HandleFunc("/login", adminLogin)   // /admin/login
