@@ -12,12 +12,12 @@ import (
 
 // News type
 type News struct {
-	ID        bson.ObjectId
+	ID        bson.ObjectId `bson:"_id"`
 	Title     string
 	Image     string
 	Detail    string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt time.Time `bson:"CreatedAt"`
+	UpdatedAt time.Time `bson:"UpdatedAt"`
 }
 
 var (
