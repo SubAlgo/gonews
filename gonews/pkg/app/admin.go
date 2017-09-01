@@ -25,15 +25,11 @@ func adminCreate(w http.ResponseWriter, r *http.Request) {
 			Title:  r.FormValue("title"),
 			Detail: r.FormValue("detail"),
 		}
-		model.CreateNews(n)
-		//image, imageHeader, err := r.FormFile("image")
-		/*
-			_, _, err := r.FormFile("image")
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
-		*/
+		err := model.CreateNews(n)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		http.Redirect(w, r, "/admin/create", http.StatusSeeOther)
 		return
 	}

@@ -3,6 +3,7 @@ package model
 import (
 	"crypto/rand"
 	"encoding/base64"
+	"fmt"
 	"sync"
 	"time"
 
@@ -32,51 +33,60 @@ func generateID() string {
 }
 
 // CreateNews create News struct
-func CreateNews(news News) {
-	news.ID = generateID()
+func CreateNews(news News) error {
+	news.ID = bson.NewObjectId()
 	news.CreatedAt = time.Now()
 	news.UpdatedAt = news.CreatedAt
-	// รายละเอียด คลิป4 [52.00]
-	muteNews.Lock()         //ทำการ lock เพื่อป้องกันการส่ง Requres
-	defer muteNews.Unlock() //เพื่อให้แน่ใจว่า unlock แล้ว
-	newsStorage = append(newsStorage, news)
-}
+	//news.ID.Hex()
 
-// ListNews fff
-func ListNews() []*News {
-	muteNews.Lock()         //ทำการ lock เพื่อป้องกันการส่ง Requres
-	defer muteNews.Unlock() //เพื่อให้แน่ใจว่า unlock แล้ว
-	r := make([]*News, len(newsStorage))
-	for i := range newsStorage {
-		n := newsStorage[i]
-		r[i] = &n
-	}
-	return r
-}
-
-// GetNews fff
-func GetNews(id string) *News {
-	muteNews.Lock()         //ทำการ lock เพื่อป้องกันการส่ง Requres
-	defer muteNews.Unlock() //เพื่อให้แน่ใจว่า unlock แล้ว
-
-	for _, news := range newsStorage {
-		if news.ID == id {
-			n := news
-			return &n
-		}
+	s := mongoSession.Copy()
+	defer s.Close()
+	err := s.DB(database).C("news").Insert(&news)
+	if err != nil {
+		return err
 	}
 	return nil
 }
 
-// DeleteNews fff
-func DeleteNews(id string) {
-	// รายละเอียด คลิป4 [52.00]
-	muteNews.Lock()         //ทำการ lock เพื่อป้องกันการส่ง Requres
-	defer muteNews.Unlock() //เพื่อให้แน่ใจว่า unlock แล้ว
-	for i, news := range newsStorage {
-		if news.ID == id {
-			newsStorage = append(newsStorage[:i], newsStorage[i+1:]...)
-			return
-		}
+// ListNews fff
+func ListNews() ([]*News, error) {
+	s := mongoSession.Copy()
+	defer s.Close()
+	var news []*News
+	err := s.DB(database).C("news").Find(nil).All(&news)
+	if err != nil {
+		return nil, err
 	}
+	return news, nil
+}
+
+// GetNews fff
+func GetNews(id string) (*News, error) {
+	ObjectID := bson.ObjectId(id)
+	if !ObjectID.Valid() {
+		return nil, fmt.Errorf("invalid id")
+	}
+	s := mongoSession.Copy()
+	defer s.Close()
+	var n News
+	err := s.DB(database).C("news").FindId(ObjectID).One(&n)
+	if err != nil {
+		return nil, err
+	}
+	return &n, nil
+}
+
+// DeleteNews fff
+func DeleteNews(id string) error {
+	objectID := bson.ObjectId(id)
+	if !objectID.Valid() { // ถ้าไม่เจอ id ให้ทำ
+		return fmt.Errorf("invalid id")
+	}
+	s := mongoSession.Copy()
+	defer s.Close()
+	err := s.DB(database).C("news").RemoveId(objectID)
+	if err != nil {
+		return err
+	}
+	return nil
 }

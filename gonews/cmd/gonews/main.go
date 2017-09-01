@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	port     = "8080"
+	//port     = ":8080" //port ดึงมาจาก file config.go แล้ว
 	mongoURL = "mongodb://127.0.0.1:27017"
 )
 
@@ -23,5 +23,12 @@ func main() {
 	if err != nil {
 		log.Fatalf("can not init model: %v", err)
 	}
+	log.Println(port)
 	http.ListenAndServe(port, mux)
+
+	/*
+		mux := http.NewServeMux()
+		app.Mount(mux)
+		http.ListenAndServe(port,mux)
+	*/
 }
