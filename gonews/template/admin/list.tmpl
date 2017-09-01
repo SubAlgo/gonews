@@ -2,6 +2,34 @@
 <div>
     Admin List
     <a href="/admin/create">Create News</a>
+    <br>
+    <table class="ui table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+             {{range .List}}
+           <tr>
+               <td>{{.ID.Hex}}</td>
+               <td>{{.Title}}</td>
+               <td>
+                   <form method="POST">
+                   <a class="ui green button" href="/admin/edit?id={{.ID.Hex}}">Edit</a>
+                   
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="id" value="{{.ID.Hex}}">
+                    <button class="ui submit button" type="submit">Delete</button>
+                   </form>
+               </td>
+           </tr>
+            {{end}}
+        </tbody>
+
+    </table>
 </div>
 {{end}} {{define "root-script"}}
 <script>

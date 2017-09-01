@@ -16,7 +16,14 @@ func adminLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func adminList(w http.ResponseWriter, r *http.Request) {
-	view.AdminList(w, nil)
+	list, err := model.ListNews()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	view.AdminList(w, &view.AdminListData{
+		List: list,
+	})
 }
 
 func adminCreate(w http.ResponseWriter, r *http.Request) {

@@ -1,11 +1,15 @@
 {{define "root-body"}}
 <div>
-    News
-    
+    News <br>
+    <h1> {{.Title}} </h1>
+    {{if .Image}}
+    <img src="{{.Image}}" alt="">
+    {{end}}
+    <p> {{.Detail}} </p>
+
 </div>
 {{end}} {{define "root-script"}}
 <script>
     console.log("index")
-
 </script>
 {{end}} {{define "root-style"}} {{end}}

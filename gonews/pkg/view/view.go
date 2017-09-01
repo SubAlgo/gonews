@@ -23,6 +23,12 @@ func News(w http.ResponseWriter, data *model.News) {
 	render(tpNews, w, data)
 }
 
+// AdminListData ff
+type AdminListData struct {
+	List []*model.News
+	//CurrentUser
+}
+
 // AdminList renders admin list view
 func AdminList(w http.ResponseWriter, data interface{}) {
 	render(tpAdminList, w, data)

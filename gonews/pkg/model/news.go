@@ -62,7 +62,10 @@ func ListNews() ([]*News, error) {
 
 // GetNews fff
 func GetNews(id string) (*News, error) {
-	ObjectID := bson.ObjectId(id)
+	if !bson.IsObjectIdHex(id) {
+		return nil, fmt.Errorf("invalid ID")
+	}
+	ObjectID := bson.ObjectIdHex(id)
 	if !ObjectID.Valid() {
 		return nil, fmt.Errorf("invalid id")
 	}

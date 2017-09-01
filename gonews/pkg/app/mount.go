@@ -6,11 +6,14 @@ import "net/http"
 func Mount(mux *http.ServeMux) {
 	mux.HandleFunc("/", index) // list all news
 	//mux.HandleFunc("/news/", newsView) // /news/:path
-	//mux.Handle("/news/", http.StripPrefix("/news", http.HandlerFunc(newsView)))
+	mux.Handle("/news/", http.StripPrefix("/news", http.HandlerFunc(newsView)))
+
+	/*จัดการ mux สำหรับ news.go แบบที่2
 	mux.Handle("/news/", http.StripPrefix("/news", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		id := r.URL.Path[1:]
 		newsView(id).ServerHTTP(w, r)
 	})))
+	*/
 
 	adminMux := http.NewServeMux()
 	adminMux.HandleFunc("/login", adminLogin)   // /admin/login
