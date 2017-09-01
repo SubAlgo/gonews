@@ -18,6 +18,11 @@ func Index(w http.ResponseWriter, data *IndexData) {
 	render(tpIndex, w, data)
 }
 
+// News render news view
+func News(w http.ResponseWriter, data *model.News) {
+	render(tpNews, w, data)
+}
+
 // AdminList renders admin list view
 func AdminList(w http.ResponseWriter, data interface{}) {
 	render(tpAdminList, w, data)

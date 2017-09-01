@@ -1,7 +1,22 @@
 package app
 
-import "net/http"
+import (
+	"log"
+	"net/http"
 
-func newsView(w http.ResponseWriter, r *http.Request) {
+	"github.com/subalgo/gonews/pkg/view"
+)
 
+/*func newsView(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Path[1:]
+	log.Println(id)
+
+	view.News(w, nil)
+}*/
+
+type newsView string
+
+func (id newsView) ServerHTTP(w http.ResponseWriter, r *http.Request) {
+	log.Println(id)
+	view.News(w, nil)
 }
