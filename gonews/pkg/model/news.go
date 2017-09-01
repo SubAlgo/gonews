@@ -65,14 +65,14 @@ func GetNews(id string) (*News, error) {
 	if !bson.IsObjectIdHex(id) {
 		return nil, fmt.Errorf("invalid ID")
 	}
-	ObjectID := bson.ObjectIdHex(id)
-	if !ObjectID.Valid() {
+	objectID := bson.ObjectIdHex(id)
+	if !objectID.Valid() {
 		return nil, fmt.Errorf("invalid id")
 	}
 	s := mongoSession.Copy()
 	defer s.Close()
 	var n News
-	err := s.DB(database).C("news").FindId(ObjectID).One(&n)
+	err := s.DB(database).C("news").FindId(objectID).One(&n)
 	if err != nil {
 		return nil, err
 	}
@@ -81,13 +81,34 @@ func GetNews(id string) (*News, error) {
 
 // DeleteNews fff
 func DeleteNews(id string) error {
-	objectID := bson.ObjectId(id)
+	/*objectID := bson.ObjectId(id)
 	if !objectID.Valid() { // ถ้าไม่เจอ id ให้ทำ
 		return fmt.Errorf("invalid id")
 	}
+	*/
+	if !bson.IsObjectIdHex(id) {
+		return fmt.Errorf("invalid ID")
+	}
+	objectID := bson.ObjectIdHex(id)
 	s := mongoSession.Copy()
 	defer s.Close()
 	err := s.DB(database).C("news").RemoveId(objectID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// UpdateNews update|Edit news
+func UpdateNews(news *News) error {
+	if news.ID == "" {
+		return fmt.Errorf("required to update")
+	}
+
+	news.UpdatedAt = time.Now()
+	s := mongoSession.Copy()
+	defer s.Close()
+	err := s.DB(database).C("news").UpdateId(news.ID, news)
 	if err != nil {
 		return err
 	}
