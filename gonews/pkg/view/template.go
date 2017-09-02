@@ -15,12 +15,13 @@ import (
 var (
 	//tpIndex = template.New("") //สร้าง temp เปล่า
 	// tpIndex = parseTemplate("template/root.tmpl", "template/index.tmpl")
-	tpIndex       = parseTemplate("root.tmpl", "index.tmpl")
-	tpNews        = parseTemplate("root.tmpl", "news.tmpl")
-	tpAdminLogin  = parseTemplate("root.tmpl", "admin/login.tmpl")
-	tpAdminList   = parseTemplate("root.tmpl", "admin/list.tmpl")
-	tpAdminCreate = parseTemplate("root.tmpl", "admin/create.tmpl")
-	tpAdminEdit   = parseTemplate("root.tmpl", "admin/edit.tmpl")
+	tpIndex         = parseTemplate("root.tmpl", "index.tmpl")
+	tpNews          = parseTemplate("root.tmpl", "news.tmpl")
+	tpAdminLogin    = parseTemplate("root.tmpl", "admin/login.tmpl")
+	tpAdminRegister = parseTemplate("root.tmpl", "admin/register.tmpl")
+	tpAdminList     = parseTemplate("root.tmpl", "admin/list.tmpl")
+	tpAdminCreate   = parseTemplate("root.tmpl", "admin/create.tmpl")
+	tpAdminEdit     = parseTemplate("root.tmpl", "admin/edit.tmpl")
 )
 
 var m = minify.New()

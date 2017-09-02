@@ -3,23 +3,18 @@
     <form class="ui form" method="POST" action="">
         <div class="field">
             <label>Username</label>
-            <input>
+            <input name="username">
         </div>
 
         <div class="field">
             <label>Password</label>
-            <input type="password">
-            <button class="ui submit blue button">Login</button>
+            <input name="password" type="password">            
         </div>
+        <button class="ui submit blue button">Register</button>
     </form>
 </div>
-{{end}}
-
-{{define "root-script"}}
+{{end}} {{define "root-script"}}
 <script>
 
 </script>
-{{end}} 
-
-{{define "root-style"}} 
-{{end}}
+{{end}} {{define "root-style"}} {{end}}

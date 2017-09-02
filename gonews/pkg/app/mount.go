@@ -9,6 +9,8 @@ func Mount(mux *http.ServeMux) {
 	mux.Handle("/upload/", http.StripPrefix("/upload", http.FileServer(http.Dir("upload"))))
 	mux.Handle("/news/", http.StripPrefix("/news", http.HandlerFunc(newsView)))
 
+	mux.HandleFunc("/register", adminRegister)
+
 	/*จัดการ mux สำหรับ news.go แบบที่2
 	mux.Handle("/news/", http.StripPrefix("/news", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		id := r.URL.Path[1:]

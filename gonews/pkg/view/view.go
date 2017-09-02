@@ -34,6 +34,11 @@ func AdminLogin(w http.ResponseWriter, data interface{}) {
 	render(tpAdminLogin, w, data)
 }
 
+// AdminRegister renders admin login view
+func AdminRegister(w http.ResponseWriter, data interface{}) {
+	render(tpAdminRegister, w, data)
+}
+
 // AdminList renders admin list view
 func AdminList(w http.ResponseWriter, data interface{}) {
 	render(tpAdminList, w, data)
