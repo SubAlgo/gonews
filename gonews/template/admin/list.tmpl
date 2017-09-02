@@ -1,7 +1,7 @@
 {{define "root-body"}}
 <div>
-    Admin List
-    <a href="/admin/create">Create News</a>
+    <h3>Admin List</h3>
+    <a class="ui blue button" href="/admin/create">Create News</a>
     <br>
     <table class="ui table">
         <thead>
@@ -22,7 +22,7 @@
                     <a class="ui green button" href="/admin/edit?id={{.ID.Hex}}">Edit</a>
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="id" value="{{.ID.Hex}}">
-                    <button class="ui submit button" type="submit">Delete</button>
+                    <button class="ui submit button red" type="submit">Delete</button>
                    </form>
                </td>
            </tr>

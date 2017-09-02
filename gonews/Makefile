@@ -4,4 +4,4 @@ dev:
 
 go get -u github.com/tdewolff/minify
 
-59
+24.3

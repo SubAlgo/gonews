@@ -1,7 +1,9 @@
 package app
 
 import (
+	"io"
 	"net/http"
+	"os"
 
 	"github.com/subalgo/gonews/pkg/model"
 	"github.com/subalgo/gonews/pkg/view"
@@ -45,12 +47,28 @@ func adminCreate(w http.ResponseWriter, r *http.Request) {
 			Title:  r.FormValue("title"),
 			Detail: r.FormValue("detail"),
 		}
+
+		if file, fileHeader, err := r.FormFile("image"); err == nil {
+			defer file.Close()
+			//fileName := time.Now().Format(time.Stamp) + "-" + fileHeader.Filename
+
+			fileName := fileHeader.Filename
+			fp, err := os.Create("upload/" + fileName) //สร้างไฟล์ไว้ที่ โฟลเดอร์ upload
+
+			if err == nil {
+				io.Copy(fp, file)
+			}
+
+			fp.Close() //Close file
+			n.Image = "/upload/" + fileName
+		}
+
 		err := model.CreateNews(n)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		http.Redirect(w, r, "/admin/create", http.StatusSeeOther)
+		http.Redirect(w, r, "/admin/list", http.StatusSeeOther)
 		return
 	}
 	view.AdminCreate(w, nil)

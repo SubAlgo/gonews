@@ -6,6 +6,7 @@ import "net/http"
 func Mount(mux *http.ServeMux) {
 	mux.HandleFunc("/", index) // list all news
 	//mux.HandleFunc("/news/", newsView) // /news/:path
+	mux.Handle("/upload/", http.StripPrefix("/upload", http.FileServer(http.Dir("upload"))))
 	mux.Handle("/news/", http.StripPrefix("/news", http.HandlerFunc(newsView)))
 
 	/*จัดการ mux สำหรับ news.go แบบที่2
@@ -19,7 +20,7 @@ func Mount(mux *http.ServeMux) {
 	adminMux.HandleFunc("/login", adminLogin)   // /admin/login
 	adminMux.HandleFunc("/list", adminList)     // /admin/list
 	adminMux.HandleFunc("/create", adminCreate) // /admin/create
-	adminMux.HandleFunc("/edit", adminEdit)     // /admin/edit
+	adminMux.HandleFunc("/edit", adminEdit)     // ถ้าพาร์ธ คือ /admin/edit จะเป็นเรียกใช้ Method adminEdit ที่อยู่ใน app/admin.go
 
 	// mux.Handle("/admin/", onlyAdmin(adminMux))
 	//ถ้าไม่ใช้ StripPrefix path ต้องเป็น adminMux.HandleFunc("/admin/login", adminLogin)
