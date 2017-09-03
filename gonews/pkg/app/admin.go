@@ -2,6 +2,7 @@ package app
 
 import (
 	"io"
+	"log"
 	"net/http"
 	"os"
 
@@ -11,6 +12,14 @@ import (
 
 func adminLogin(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
+		username := r.FormValue("username")
+		password := r.FormValue("password")
+		userID, err := model.Login(username, password)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		log.Println("UserID: ", userID)
 		http.Redirect(w, r, "/admin/list", http.StatusSeeOther)
 		return
 	}

@@ -1,14 +1,15 @@
 {{define "root-body"}}
 <div>
+    <h1>LOGIN</h1>
     <form class="ui form" method="POST" action="">
         <div class="field">
             <label>Username</label>
-            <input>
+            <input name="username">
         </div>
 
         <div class="field">
             <label>Password</label>
-            <input type="password">
+            <input name="password" type="password">
             <button class="ui submit blue button">Login</button>
         </div>
     </form>
