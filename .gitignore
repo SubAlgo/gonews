@@ -1,2 +1,6 @@
 *.jpg
-hah-service/
+/**/hah-service/
+./**/hah-service/**/*
+/./**/hah-service/**/*
+./hah-service/
+/hah-service/
