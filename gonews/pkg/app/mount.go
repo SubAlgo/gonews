@@ -1,6 +1,7 @@
 package app
 
 import "net/http"
+import "github.com/subalgo/gonews/pkg/model"
 
 // Mount mount handler to mux (ชื่อ func ที่เป็นตัวใหญ่นำหน้าจะมีการ Export จำเป็นต้องมีการ commnet)
 func Mount(mux *http.ServeMux) {
@@ -10,6 +11,7 @@ func Mount(mux *http.ServeMux) {
 	mux.Handle("/news/", http.StripPrefix("/news", http.HandlerFunc(newsView)))
 
 	mux.HandleFunc("/register", adminRegister)
+	mux.HandleFunc("/login", adminLogin) // /admin/login
 
 	/*จัดการ mux สำหรับ news.go แบบที่2
 	mux.Handle("/news/", http.StripPrefix("/news", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -19,7 +21,8 @@ func Mount(mux *http.ServeMux) {
 	*/
 
 	adminMux := http.NewServeMux()
-	adminMux.HandleFunc("/login", adminLogin)   // /admin/login
+
+	adminMux.HandleFunc("/logout", adminLogout) // /admin/logout
 	adminMux.HandleFunc("/list", adminList)     // /admin/list
 	adminMux.HandleFunc("/create", adminCreate) // /admin/create
 	adminMux.HandleFunc("/edit", adminEdit)     // ถ้าพาร์ธ คือ /admin/edit จะเป็นเรียกใช้ Method adminEdit ที่อยู่ใน app/admin.go
@@ -33,5 +36,32 @@ func Mount(mux *http.ServeMux) {
 //Middleware สำหรับ check การ Login ของ Admin
 
 func onlyAdmin(h http.Handler) http.Handler {
-	return h
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		
+		cookie, err := r.Cookie("user")
+
+		/*if err != nil { //ถ้า cookie หมดอายุ Redirect ไปหน้าแรก
+			http.Redirect(w, r, "/", http.StatusFound)
+			return
+		}*/
+
+		if err != nil {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+		
+		userID := cookie.Value
+		ok, err := model.CheckUserID(userID)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if !ok {
+			http.Redirect(w, r, "/", http.StatusFound)
+			return
+			/*http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return*/
+		}
+		h.ServeHTTP(w, r)
+	})
 }
