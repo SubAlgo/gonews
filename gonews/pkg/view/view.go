@@ -2,6 +2,7 @@ package view
 
 import (
 	"net/http"
+	"net/url"
 
 	"github.com/subalgo/gonews/pkg/model"
 )
@@ -29,9 +30,14 @@ type AdminListData struct {
 	//CurrentUser
 }
 
+type AdminLoginData struct {
+	Flash url.Values
+}
+
 // AdminLogin renders admin login view
-func AdminLogin(w http.ResponseWriter, data interface{}) {
+func AdminLogin(w http.ResponseWriter, data *AdminLoginData) {
 	render(tpAdminLogin, w, data)
+	data.Flash.Del("errors") //ใช้เคลีย Flash message ไม่ให้มัน append ในหน้า login
 }
 
 // AdminRegister renders admin login view

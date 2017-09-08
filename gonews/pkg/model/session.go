@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"net/http"
+	"net/url"
 	"sync"
 	"time"
 )
@@ -11,6 +12,8 @@ import (
 type Session struct {
 	ID     string
 	UserID string
+	//Flash  map[string][]string //ใส่ string ได้สไลด์ string
+	Flash url.Values // struct เดียว กับ map[string][]string
 }
 
 var sessionStore struct {
@@ -28,6 +31,7 @@ func generateID() string {
 func CreateSession() *Session {
 	return &Session{
 		ID: generateID(),
+		Flash: make(url.Values),
 	}
 }
 

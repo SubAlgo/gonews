@@ -2,6 +2,7 @@ package app
 
 import (
 	"io"
+	"log"
 	"net/http"
 	"os"
 
@@ -10,21 +11,28 @@ import (
 )
 
 func adminLogin(w http.ResponseWriter, r *http.Request) {
+	sess := model.GetSession(r)
 	if r.Method == http.MethodPost {
 		username := r.FormValue("username")
 		password := r.FormValue("password")
 		userID, err := model.Login(username, password)
+
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			sess.Flash.Add("errors", err.Error())
+			sess.Save(w)
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
 			return
 		}
-		sess := model.GetSession(r)
+
 		sess.UserID = userID
 		sess.Save(w)
 		http.Redirect(w, r, "/admin/list", http.StatusSeeOther)
 		return
 	}
-	view.AdminLogin(w, nil)
+	log.Print(sess.Flash)
+	view.AdminLogin(w, &view.AdminLoginData{
+		Flash: sess.Flash,
+	})
 }
 
 func adminRegister(w http.ResponseWriter, r *http.Request) {
