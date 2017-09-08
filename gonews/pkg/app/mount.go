@@ -37,21 +37,10 @@ func Mount(mux *http.ServeMux) {
 
 func onlyAdmin(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		
-		cookie, err := r.Cookie("user")
+		sess := model.GetSession(r)
+		//userID := cookie.Value
+		ok, err := model.CheckUserID(sess.UserID)
 
-		/*if err != nil { //ถ้า cookie หมดอายุ Redirect ไปหน้าแรก
-			http.Redirect(w, r, "/", http.StatusFound)
-			return
-		}*/
-
-		if err != nil {
-			http.Error(w, "Unauthorized", http.StatusUnauthorized)
-			return
-		}
-		
-		userID := cookie.Value
-		ok, err := model.CheckUserID(userID)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

@@ -2,10 +2,8 @@ package app
 
 import (
 	"io"
-	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/subalgo/gonews/pkg/model"
 	"github.com/subalgo/gonews/pkg/view"
@@ -20,16 +18,9 @@ func adminLogin(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
-		log.Println("userID: ", userID)
-		http.SetCookie(w, &http.Cookie{
-			Name:     "user",
-			Value:    userID,
-			MaxAge:   int(10 * time.Minute / time.Second), //10นาที
-			HttpOnly: true,                                //ป้องกันการใช้ JavaScript อ่านค่า
-			Path:     "/",
-			//Secure:   true,                                //จะส่ง cookie ต่อเมื่อใช้ https เท่านั้น
-		})
+		sess := model.GetSession(r)
+		sess.UserID = userID
+		sess.Save(w)
 		http.Redirect(w, r, "/admin/list", http.StatusSeeOther)
 		return
 	}
@@ -52,13 +43,17 @@ func adminRegister(w http.ResponseWriter, r *http.Request) {
 }
 
 func adminLogout(w http.ResponseWriter, r *http.Request) {
-	http.SetCookie(w, &http.Cookie{
+	sess := model.GetSession(r)
+	sess.UserID = ""
+	sess.Save(w)
+
+	/*http.SetCookie(w, &http.Cookie{
 		Name:     "user",
 		Value:    "",
 		MaxAge:   -1,
 		Path:     "/",
 		HttpOnly: true,
-	})
+	})*/
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
