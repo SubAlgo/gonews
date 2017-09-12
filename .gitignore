@@ -1,4 +1,5 @@
 *.jpg
+config.json
 /**/hah-service/
 ./**/hah-service/**/*
 /./**/hah-service/**/*
