@@ -1,11 +1,16 @@
 package app
 
-import "net/http"
-import "github.com/subalgo/gonews/pkg/model"
+import (
+	"context"
+	"log"
+	"net/http"
+
+	"github.com/subalgo/gonews/pkg/model"
+)
 
 // Mount mount handler to mux (ชื่อ func ที่เป็นตัวใหญ่นำหน้าจะมีการ Export จำเป็นต้องมีการ commnet)
 func Mount(mux *http.ServeMux) {
-	mux.HandleFunc("/", index) // list all news
+	mux.Handle("/", fetchUser(http.HandlerFunc(index))) // list all news
 	//mux.HandleFunc("/news/", newsView) // /news/:path
 	mux.Handle("/upload/", http.StripPrefix("/upload", http.FileServer(http.Dir("upload"))))
 	mux.Handle("/news/", http.StripPrefix("/news", http.HandlerFunc(newsView)))
@@ -52,5 +57,24 @@ func onlyAdmin(h http.Handler) http.Handler {
 			return*/
 		}
 		h.ServeHTTP(w, r)
+	})
+}
+
+func fetchUser(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sess := model.GetSession(r)
+		if sess.UserID == "" {
+			h.ServeHTTP(w, r)
+			return
+		}
+		username, err := model.GerUsernameFromID(sess.UserID)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		ctx := context.WithValue(r.Context(), "username", username)
+		nr := r.WithContext(ctx)
+		log.Println(username)
+		h.ServeHTTP(w, nr)
 	})
 }

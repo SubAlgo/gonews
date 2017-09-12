@@ -1,10 +1,12 @@
 {{define "root-body"}}
 <div>
-    Index Page
+    {{if .Username}}
+    <p>Hello, {{.Username}}</p>
+    {{else}}
     <a class="ui button blue" href="/login">Login</a>
     <a class="ui button green" href="/register">Register</a>
+    {{end}}    
     <br>
-    {{.}}
     <ul>
     {{range .List}}
         <li><a href="/news/{{.ID.Hex}}">{{.Title}}</a></li>

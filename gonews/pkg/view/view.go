@@ -9,7 +9,8 @@ import (
 
 // IndexData fff
 type IndexData struct {
-	List []*model.News
+	List     []*model.News
+	Username string
 }
 
 // --------------------------------------- RENDER ---------------------------------------
